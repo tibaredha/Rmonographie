@@ -1,0 +1,570 @@
+---
+title: ""
+subtitle: ""
+author: ""
+date: ""
+geometry: "left=0.5cm,right=1cm,top=0.5cm,bottom=1.5cm"
+output:
+  pdf_document:
+    df_print: kable
+    toc: true
+    toc_depth: 3
+    fig_caption: true
+    number_sections: TRUE
+    includes:
+      in_header: "tex/preamble.tex"
+      before_body: "tex/pagedegarde_rh.tex"
+  html_document: default
+  word_document: default
+bibliography : [bibliography/bibliography.bib] 
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}} 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning=FALSE,error=FALSE,message=FALSE,cache = FALSE)
+opts <- options(knitr.kable.NA = "*") # pour remplacer NA avec *
+# https://www.youtube.com/watch?v=AlLGeKddUd8&t=28s
+# rapport = 
+# 1-proportion : = n/N * k  (si % k=100) 
+# 2-ratios = 02 quantitées H/F
+  ## 2.1-cote   = 02 rapport : probailité evenement / probailité evenement inverse jeu de carte  1 2 3 4  5 6 = 1/5 
+  ## 2.2-indice = 100 lit pour un medecin 
+# 3-taux : = 
+#numerateur :  cas survenus               dans une periode donnée      /dans un espace circonscrit /dans une population définie carcteristique de persone / 
+#denominateur: ensemble de la population  dans pendant la meme période /dans le meme  espace       /dans le meme groupe de la population carcteristique de persone
+```
+
+
+\newpage
+\listoffigures
+
+\newpage
+\listoftables
+
+\newpage
+
+# Région de Médéa
+
+```{r load_library}
+rm(list=ls())
+if(!require(pacman))install.packages("pacman");library("pacman")
+p_load(tidyverse,lubridate,ggthemes,sf,mapsf,yahiatiba)#,kableExtra
+#source(file = "drh_function.R",encoding = "UTF-8")
+source(file = "ir_function.R",encoding = "UTF-8")
+data(wdc)
+data(wc_region)
+data(djelfa_drh)
+```
+
+
+
+
+## Inspection regionale 
+
+Décret exécutif n° 23-216 du 18 Dhou El Kaâda 1444
+correspondant au 7 juin 2023 modifiant et
+complétant le décret exécutif n° 96-68
+du 7 Ramadhan 1416 correspondant au 27 janvier
+1996 portant création, missions, organisation et
+fonctionnement de l'inspection générale
+du ministère de la santé et de la population.[@F20230_40_13]
+
+
+Arrêté du 29 Dhou El Hidja 1444 correspondant au
+17 juillet 2023 fixant le siège et la compétence
+territoriale des inspections régionales de la santé.[@F20230_59_19]
+
+## Praticiens Inspecteurs :
+  
+```{r}
+knitr::kable(misp,caption = "Praticiens Inspecteurs Coordinateurs ")
+```
+
+
+```{r}
+mtq <- yahiatiba::shp_dzrw  
+# mtq <- wc_region
+mf_theme("candy")
+mf_map(
+  x = mtq,var = "WILAYA",type = "typo",
+  #pal = c("aquamarine4", "yellow3", "wheat","green","red","white"),
+  lwd = 0.5,
+  val_order = c("Chlef","Aindefla","Medea","Djelfa","Laghouat","Msila"),
+  leg_pos = "topright",
+  leg_adj = c(0, 0),
+  leg_title = "Wilayas"
+)
+#mf_label(x = mtq, var = "WILAYA",cex = 0.9, halo = TRUE, r = 0.15)
+
+mf_layout(
+  title = "Région Médéa",
+  credits = paste0(
+    "Sources: DSP Djelfa, 2024\n",
+    "Dr TIBA ",
+    packageVersion("mapsf")
+  )
+)
+```
+
+
+
+
+
+
+
+
+
+```{r,echo=FALSE}
+data(region_e_lit)
+str <- region_e_lit
+rm(region_e_lit)
+#glimpse(str)
+#levels(str$ETA)
+# aindefla
+```
+
+
+
+\newpage
+# Chlef
+
+```{r ,fig.cap = "Communes Wilaya de Chlef",fig.height=6, fig.width=6}
+yahiatiba::carte_w_c_pv(wc_region,"Chlef")
+```
+
+
+## Dairas
+
+```{r}
+wdc_dairas(wdc,"Chlef")
+```
+
+## Communes
+
+```{r}
+wdc_communes(wdc,"Chlef")
+```
+
+
+## structures
+
+```{r}
+#chlef
+yahiatiba::str_lit1_e_x(str,"eph_amr")      #
+yahiatiba::str_lit1_e_x(str,"eph_chr")      #
+yahiatiba::str_lit1_e_x(str,"eph_cht")      #
+yahiatiba::str_lit1_e_x(str,"eph_olm")      #
+yahiatiba::str_lit1_e_x(str,"eph_sbh")      #
+yahiatiba::str_lit1_e_x(str,"eph_srb")      #
+yahiatiba::str_lit1_e_x(str,"eph_tnsa")     #
+yahiatiba::str_lit1_e_x(str,"eph_tnsz")     #
+yahiatiba::str_lit1_e_x(str,"ehs_tns")      #
+```
+
+
+\newpage
+# Ain Defla
+
+```{r ,fig.cap = "Communes Wilaya de Aindefla",fig.height=6, fig.width=6}
+yahiatiba::carte_w_c_pv(wc_region,"Aindefla")
+```
+
+## Dairas
+
+```{r}
+wdc_dairas(wdc,"Aindefla")
+```
+
+## Communes
+
+```{r}
+wdc_communes(wdc,"Aindefla")
+```
+
+
+## structures publiques EPH
+
+```{r}
+yahiatiba::str_lit1_e_x(str,"MAKOUR_Hamou")     #
+yahiatiba::str_lit1_e_x(str,"eph_atf")          #
+yahiatiba::str_lit1_e_x(str,"LATRACHE_Ahmed")   #
+yahiatiba::str_lit1_e_x(str,"FARES_Yahia")      #
+```
+
+
+\newpage
+# Médéa
+
+```{r ,fig.cap = "Communes Wilaya de Medea",fig.height=6, fig.width=6}
+yahiatiba::carte_w_c_pv(wc_region,"Medea")
+```
+
+## Dairas
+
+```{r}
+wdc_dairas(wdc,"Medea")
+```
+
+## Communes
+
+```{r}
+wdc_communes(wdc,"Medea")
+```
+
+
+## structures publiques EPH
+
+```{r}
+#medea
+yahiatiba::str_lit1_e_x(str,"eph_abcf")      #
+yahiatiba::str_lit1_e_x(str,"Benyoucef_Benkhedda")      #
+yahiatiba::str_lit1_e_x(str,"eph_bslm")      #
+yahiatiba::str_lit1_e_x(str,"eph_chl")      #
+yahiatiba::str_lit1_e_x(str,"eph_kbk")      #
+yahiatiba::str_lit1_e_x(str,"Mohamed_Boudiaf")      #
+yahiatiba::str_lit1_e_x(str,"eph_tblt")      #
+```
+
+
+\newpage
+# Djelfa
+
+```{r ,fig.cap = "Communes Wilaya de Djelfa",fig.height=6, fig.width=6}
+yahiatiba::carte_w_c_pv(wc_region,"Djelfa")
+```
+
+## Dairas
+
+```{r}
+wdc_dairas(wdc,"Djelfa")
+```
+
+## Communes
+
+```{r}
+wdc_communes(wdc,"Djelfa")
+```
+
+## structures publiques EPH
+```{r}
+# djelfa
+yahiatiba::str_lit1_e_x(str,"eph_bi")           #eph birine
+yahiatiba::str_lit1_e_x(str,"SAADAOUI_Mokhtar") #eph_ao
+yahiatiba::str_lit1_e_x(str,"BOUGERA_Ahmed")    #eph_hbb
+yahiatiba::str_lit1_e_x(str,"MOUHAD_Abdelkader")#eph_dje
+yahiatiba::str_lit1_e_x(str,"HATHAT_Boubaker")  #eph_mi
+yahiatiba::str_lit1_e_x(str,"KAKI_Mohamed")     #ehs_me
+yahiatiba::str_lit1_e_x(str,"ehs_oph")          #"h ophtalmo
+yahiatiba::str_lit1_e_x(str,"BENCHERIF_Ahmed")  #ehs_cac
+yahiatiba::str_lit1_e_x(str,"HANI_Mohamed")#    eph_ma
+yahiatiba::str_lit1_e_x(str,"HENICHI_Mostapha") #eph_id
+```
+
+## RH
+
+```{r}
+wilaya_nom <- "Wilaya de Djelfa"
+
+#colnames(djelfa_drh)
+#suppressWarnings(yahiatiba::drh_grades(djelfa_drh))
+#suppressWarnings(yahiatiba::drh_specialite(djelfa_drh))
+#suppressWarnings(yahiatiba::drh_str2(djelfa_drh))
+#suppressWarnings(yahiatiba::drh_specialiste_str(djelfa_drh))
+#suppressWarnings(yahiatiba::drh_specialiste_str1(djelfa_drh))
+
+```
+
+### Répartition des Ressources hummaines par Etablissment
+
+```{r}
+yahiatiba::drh_str(djelfa_drh)
+```
+
+### Répartition des Ressources hummaines par Etablissment et Age
+
+```{r}
+yahiatiba::drh_sa(djelfa_drh,wilaya_nom)
+```
+
+### Répartition des Ressources hummaines par Tranche d'ages 
+
+```{r}
+yahiatiba::drh_ta(djelfa_drh,wilaya_nom)
+```
+
+### Répartition des Ressources hummaines par Etablissment et grade
+
+```{r}
+yahiatiba::drh_str_grade(djelfa_drh)
+```
+
+### Répartition des Ressources hummaines par Grade (état numérique)
+
+```{r}
+suppressWarnings(yahiatiba::drh_grade(djelfa_drh))
+```
+
+### Répartition des Ressources hummaines par Grade (graphe)
+
+```{r}
+suppressWarnings(yahiatiba::drh_grade1(djelfa_drh,wilaya_nom))
+```
+
+```{r}
+rm(djelfa_drh)
+```
+
+
+## MDO
+
+```{r}
+wc_algeria <- yahiatiba::wc_algeria
+pop <- yahiatiba::pop
+df <- yahiatiba::mdo
+```
+
+### Déclaration par Année et mois
+
+```{r}
+yahiatiba::declaration_a(df) # année mois
+```
+
+
+### Déclaration par Etablissment et sexe
+
+```{r}
+yahiatiba::declaration_e(df) # etatblissement sexe
+```
+
+### Déclaration par Commune et Sexe
+
+```{r}
+yahiatiba::declaration_c(df,pop) # commune sexe population
+```
+
+### Déclaration par tranches d'ages
+
+```{r}
+yahiatiba::declaration_ta(df)
+```
+
+### Déclaration par EPSP
+
+```{r}
+yahiatiba::decpta_epsp(df)
+```
+
+### Déclaration par Commune et tranches d'ages
+
+```{r}
+yahiatiba::decpta_commune(df)
+```
+
+### Déclaration par Pathologie te tranches d'ages 
+
+```{r}
+yahiatiba::decpta_pathologie(df)
+```
+
+### Déclaration par tranches d'ages
+
+```{r}
+yahiatiba::declaration_ta1(df,900,300)
+```
+
+### Déclaration par Pathologie et mois
+
+```{r}
+yahiatiba::declaration_p(df)
+```
+
+### Population par commune (état SIG)
+
+```{r}
+yahiatiba::carte()
+```
+
+### Déclaration par Commune (état SIG)
+
+```{r}
+yahiatiba::sigmdo(wc_algeria,df)
+```
+
+### Déclaration par Temps
+
+```{r}
+##yahiatiba::mdots(df)
+```
+
+```{r}
+rm(wc_algeria,pop,df)
+```
+
+
+\newpage
+# Laghouat
+
+```{r ,fig.cap = "Communes Wilaya de Laghouat",fig.height=6, fig.width=6}
+yahiatiba::carte_w_c_pv(wc_region,"Laghouat")
+```
+
+## Dairas
+
+```{r}
+wdc_dairas(wdc,"Laghouat")
+```
+
+## Communes
+
+```{r}
+wdc_communes(wdc,"Laghouat")
+```
+
+
+## structures publiques EPH
+```{r}
+#laghouat
+yahiatiba::str_lit1_e_x(str,"eph_lgt")      #
+yahiatiba::str_lit1_e_x(str,"eph_mxt")      #
+yahiatiba::str_lit1_e_x(str,"eph_afl")      #
+yahiatiba::str_lit1_e_x(str,"eph_ksh")      #
+yahiatiba::str_lit1_e_x(str,"ehs_mel")      #
+yahiatiba::str_lit1_e_x(str,"ehs_mea")      #
+```
+
+
+\newpage
+# Msila
+
+```{r ,fig.cap = "Communes Wilaya de Msila",fig.height=6, fig.width=6}
+yahiatiba::carte_w_c_pv(wc_region,"Msila")
+```
+
+## Dairas
+
+```{r}
+wdc_dairas(wdc,"Msila")
+```
+
+## Communes
+
+```{r}
+wdc_communes(wdc,"Msila")
+```
+
+
+## structures publiques EPH
+```{r}
+#msila
+yahiatiba::str_lit1_e_x(str,"eph_alm")      #
+yahiatiba::str_lit1_e_x(str,"eph_bns")      #
+yahiatiba::str_lit1_e_x(str,"eph_sda")      #
+yahiatiba::str_lit1_e_x(str,"eph_bsd")      #
+yahiatiba::str_lit1_e_x(str,"eph_mgr")      #
+yahiatiba::str_lit1_e_x(str,"eph_msl")      #
+yahiatiba::str_lit1_e_x(str,"ehs_me")      #
+yahiatiba::str_lit1_e_x(str,"ehs_psc")      #
+```
+
+
+
+\newpage
+# Région
+
+## Wilayas
+
+```{r}
+wdc_tbl_w <- function(region) {
+wilayapop <- region %>% 
+  dplyr::select(WILAYA,DAIRA,POP,SUP) %>%
+  dplyr::group_by(WILAYA) %>%
+  dplyr::summarise(POPW = sum(POP),
+                   SUPT = sum(SUP),
+                   COMMUNE = n()
+                   ) %>%
+  dplyr::mutate(DENS = round(POPW/SUPT, digits = 2)) %>%
+  dplyr::arrange(WILAYA) #%>%  View()
+N=nrow(wilayapop)
+totalpop  <- data.frame(WILAYA=paste0("Total : ",N), t(colSums(wilayapop[, -1])))
+df_new <- rbind(wilayapop,totalpop) #sep,
+knitr::kable(df_new,
+             col.names = c('Wilayas', 'Population', 'Superficie','Commune', 'Densité'),
+             caption = paste0("Région médéa:Wilayas"),align = "lrrrrrrrr")    
+}
+
+wdc_tbl_w(wdc)
+
+```
+
+
+## Dairas
+
+```{r}
+wdc_tbl_d <- function(region) {
+wilayapop <- region %>% 
+  dplyr::select(WILAYA,DAIRA,POP,SUP) %>%
+  dplyr::group_by(DAIRA) %>%
+  dplyr::summarise(POPW = sum(POP),
+                   SUPT= sum(SUP),
+                   COMMUNE=n()
+                   ) %>%
+  dplyr::mutate(DENS = round(POPW/SUPT, digits = 2)) %>%
+  dplyr::arrange(DAIRA) #%>%  View()
+N=nrow(wilayapop)
+totalpop  <- data.frame(DAIRA=paste0("Total : ",N), t(colSums(wilayapop[, -1])))
+df_new <- rbind(wilayapop,totalpop) #sep,
+#View(df_new)  
+knitr::kable(df_new,
+             col.names = c('Wilayas', 'Population', 'Superficie', 'Commune', 'Densité'),
+             caption = paste0("Région médéa:Dairas"),align = "lrrrrrrrr")    
+}
+wdc_tbl_d(wdc)
+
+
+```
+
+
+
+## structures
+
+```{r}
+str_lit_wil(str)
+str_lit_dai(str)
+str_lit_com (str)
+str_lit_cs(str)
+str_lit_typ (str)
+str_lit_eta(str)
+str_lit_ser (str)
+```
+
+
+```{r}
+str_ser_lit(str,"gyneco obstetrique")
+str_ser_lit(str,"pediatrie")
+str_ser_lit(str,"chirurgie generale")
+str_ser_lit(str,"medecine interne")
+str_ser_lit(str,"ophtalmologie")
+str_ser_lit(str,"reanimation")
+str_ser_lit(str,"umc")
+```
+
+
+
+
+# Annexes
+
+\newpage
+
+\includepdf[pages=12-13]{pdf_tuto/F20230_40_13.pdf}
+
+\newpage
+
+\includepdf[pages=19-19]{pdf_tuto/F20230_59_19.pdf}
+
+\newpage
+
+# Références
+
